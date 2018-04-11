@@ -1,2 +1,0 @@
-# SelectFormikSemanticForm
-Created with CodeSandbox
