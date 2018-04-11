@@ -6,16 +6,15 @@ import Yup from "yup";
 import { Form, Select } from "semantic-ui-react";
 
 const FormikSemanticSelect = ({
-  field: { name },
+  field: { name, value },
   form: { touched, errors, setFieldTouched, setFieldValue },
   options,
   onChange,
   ...props
 }) => {
   const handleChange = (event, key, data) => {
-    console.log(key)
     setFieldTouched(name, true);
-    setFieldValue(name, data);
+    setFieldValue(name, key.value);
 
     if (onChange) {
       onChange(event, key, data);
@@ -27,6 +26,7 @@ const FormikSemanticSelect = ({
       <Select
         {...props}
         name={name}
+        value={value}
         options={options}
         onChange={handleChange}
         onBlur={setFieldTouched}
@@ -40,7 +40,7 @@ const FormikSelect = ({ field, ...props }) => (
   <Field {...field} {...props} component={FormikSemanticSelect} />
 );
 
-const lista = [{ key: "af", value: "af", flag: "af", text: "Afghanistan" }];
+const lista = [{ value: "af", text: "Afghanistan" }];
 
 const MyForm = props => (
   <FormFormik {...props}>
@@ -57,28 +57,17 @@ const MyForm = props => (
 
 const EnhancedForm = withFormik({
   mapPropsToValues: props => ({
-    selecione: []
+    selecione: ""
   }),
   validationSchema: Yup.object().shape({
-    selecione: Yup.array()
-      .min(1)
-      .of(
-        Yup.object().shape({
-          label: Yup.string().required(),
-          value: Yup.string().required()
-        })
-      )
+    selecione: Yup.string().required()
   }),
   handleSubmit: (values, { props, resetForm }) => {
-    console.log("values", JSON.stringify(values));
+    console.log(values);
     resetForm();
   }
 })(MyForm);
 
-const App = () => (
-  <div>
-    <EnhancedForm />
-  </div>
-);
+const App = () => <EnhancedForm />;
 
 render(<App />, document.getElementById("root"));
